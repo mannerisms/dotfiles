@@ -1,7 +1,7 @@
 # Source the first path that exists
 _source_plugin() {
-    for path in "$@"; do
-        [[ -f "$path" ]] && source "$path" && return
+    for _p in "$@"; do
+        [[ -f "$_p" ]] && source "$_p" && return
     done
     echo "warning: plugin not found: $1"
 }
