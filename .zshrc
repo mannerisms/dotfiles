@@ -1,17 +1,26 @@
 # === Path Configuration ===
-# Base PATH
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-
-# Homebrew PATH (should come before other PATH modifications)
 export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # === Editor Configuration ===
 export EDITOR=vim
 export VISUAL=$EDITOR
 
+# === History Configuration ===
+export HISTFILE=~/.zsh_history
+export HISTSIZE=50000
+export SAVEHIST=100000
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+setopt EXTENDED_HISTORY
+setopt HIST_VERIFY
+
 # === Source Configuration Files ===
-# Array of config files to source
-local config_files=(
+typeset -a config_files=(
     ~/.sh/aliases.sh
     ~/.sh/functions.sh
     ~/.zsh/functions.zsh
@@ -19,34 +28,33 @@ local config_files=(
     ~/.zsh/bindkeys.zsh
 )
 
-# Source each config file if it exists
 for file in $config_files; do
     [[ -f $file ]] && source $file
 done
 
 # === System Specific Configuration ===
-# Remap caps lock to escape on Linux systems
 if [[ -f /usr/bin/setxkbmap ]]; then
     setxkbmap -option caps:escape || echo "Failed to remap caps lock to escape"
 fi
 
+# === Zoxide (smart directory jumping) ===
+eval "$(zoxide init zsh)"
+
 # === Starship Prompt ===
-export STARSHIP_CONFIG=~/.config/starship/starship.toml 
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
 
-# === Conda Configuration ===
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+# === Docker CLI completions ===
+fpath=(/Users/bastiaan/.docker/completions $fpath)
+autoload -Uz compinit && compinit
 
+# === NVM (lazy-loaded) ===
+export NVM_DIR="$HOME/.nvm"
+nvm() {
+    unset -f nvm node npm npx
+    [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"
+    nvm "$@"
+}
+node() { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"; node "$@"; }
+npm()  { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"; npm "$@"; }
+npx()  { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"; npx "$@"; }

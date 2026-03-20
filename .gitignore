@@ -1,39 +1,52 @@
-# Folder view configuration files
+# System
 .DS_Store
 Desktop.ini
-
-# Thumbnail cache files
 ._*
 Thumbs.db
-
-# Files that might appear on external disks
 .Spotlight-V100
 .Trashes
-
-# Compiled Python files
-*.pyc
-
-# Compiled C++ files
-*.out
-
-# Application specific files
-venv
-node_modules
-.sass-cachevim/autoload/
-vim/plugged/
 *DS_Store
 
-# STANDARD PYTHON FILES
-# Byte-compiled / optimized / DLL files
+# Secrets & credentials
+.ssh/
+.gnupg/
+.netrc
+.aws/
+.config/gh/
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+
+# Shell history
+.zsh_history
+.bash_history
+.history
+.local/share/fish/fish_history
+
+# App data that may contain credentials
+.config/iterm2/
+*.plist
+
+# Claude Code (machine-specific)
+.claude/
+
+# Build artifacts
+*.pyc
+*.out
 __pycache__/
 *.py[cod]
 *$py.class
+venv/
+node_modules/
+.sass-cache
 
-*automatic_backups*
-
-# vim files
+# Vim
 .vim/autoload
 .vim/plugged
 
-# backup files
+# Misc
+*automatic_backups*
 *.bak

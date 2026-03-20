@@ -1,26 +1,32 @@
 #!/bin/bash
+set -e
 
-brew update 
+brew update
 
-# ask if brew should be upgraded
-read -p "Do you want to upgrade existing brew packages? (y/n) " -n 1 -r
+read -p "Upgrade existing brew packages? (y/n) " -n 1 -r
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Upgrading brew"
     brew upgrade
-else
-    echo "Skipping brew upgrade"
 fi
 
-brew install alacritty
+# CLI tools
 brew install bat
 brew install fzf
-brew install istat-menus
-brew install logseq
 brew install stow
 brew install tmux
-brew install trash
 brew install tree
 brew install yt-dlp
+brew install zoxide
+brew install starship
+
+# ZSH plugins
 brew install zsh-autosuggestions
+brew install zsh-history-substring-search
 brew install zsh-syntax-highlighting
 brew install zsh-you-should-use
+
+# Casks
+brew install --cask alacritty
+brew install --cask istat-menus
+brew install --cask logseq
+brew install --cask trash

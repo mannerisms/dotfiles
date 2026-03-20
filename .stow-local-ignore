@@ -1,9 +1,9 @@
 \.git
+\.claude
 gitignore
 scripts
 README
 .DS_Store
 fonts
 deploy.sh
-fonts/
 \.bak$

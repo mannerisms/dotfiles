@@ -1,19 +1,28 @@
-source /opt/homebrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /opt/homebrew/share/zsh-you-should-use/you-should-use.plugin.zsh
+# Source the first path that exists
+_source_plugin() {
+    for path in "$@"; do
+        [[ -f "$path" ]] && source "$path" && return
+    done
+    echo "warning: plugin not found: $1"
+}
 
-eval 
-    fuck () {
-        TF_PYTHONIOENCODING=$PYTHONIOENCODING;
-        export TF_ALIAS=fuck;
-        export TF_SHELL_ALIASES=$(alias);
-        export TF_HISTORY="$(fc -ln -10)";
-        export PYTHONIOENCODING=utf-8;
-        TF_CMD=$(
-            thefuck THEFUCK_ARGUMENT_PLACEHOLDER $@
-        ) && eval $TF_CMD;
-        unset TF_HISTORY;
-        export PYTHONIOENCODING=$TF_PYTHONIOENCODING;
-        test -n "$TF_CMD" && print -s $TF_CMD
-    }
-    
+_source_plugin \
+    /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+    /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+_source_plugin \
+    /opt/homebrew/share/zsh-you-should-use/you-should-use.plugin.zsh \
+    ~/.zsh/zsh-you-should-use/you-should-use.plugin.zsh
+
+_source_plugin \
+    /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+    /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+_source_plugin \
+    /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh \
+    ~/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+eval "$(fzf --zsh)"
+
+ZSH_AUTOSUGGEST_STRATEGY=(history)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'

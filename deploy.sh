@@ -1,84 +1,81 @@
 #!/bin/bash
+set -e
 
-backup_files() {
-	if [ -f ~/.bashrc ]; then
-		mv -f ~/.bashrc ~/.bashrc.bak
-	fi
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+OS="$(uname)"
 
-	if [ -f ~/.zshrc ]; then
-		mv -f ~/.zshrc ~/.zshrc.bak
-	fi
+ask() {
+    echo ""
+    read -p "$1 (y/n) " -n 1 -r
+    echo ""
+    [[ $REPLY =~ ^[Yy]$ ]]
 }
 
-FONT_DIR=""
+backup_dotfiles() {
+    for file in ~/.bashrc ~/.zshrc; do
+        if [ -f "$file" ] && [ ! -L "$file" ]; then
+            echo "Backing up $file -> $file.bak"
+            mv -f "$file" "$file.bak"
+        fi
+    done
+}
 
-# check if operating system is linux or macos
-if [ "$(uname)" == "Darwin" ]; then
-	FONT_DIR="$HOME/Library/Fonts"
-	# Do something under Mac OS X platform
-	echo "MacOS detected"
+install_fonts() {
+    if [ "$OS" == "Darwin" ]; then
+        FONT_DIR="$HOME/Library/Fonts"
+    else
+        FONT_DIR="$HOME/.fonts"
+        mkdir -p "$FONT_DIR"
+    fi
 
-	# ask if dependencies should be installed
-	read -p "Do you want to install dependencies? (y/n) " -n 1 -r
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		echo "Installing dependencies"
-		# install mac dependencies
-		brew update && brew upgrade
-		bash scripts/install/install-deps-macos.sh
-	else
-		echo "Skipping dependencies installation"
-	fi
+    echo "Copying fonts to $FONT_DIR/"
+    cp "$DOTFILES_DIR"/fonts/* "$FONT_DIR/"
 
-elif [ "$(uname)" == "Linux" ]; then
-	FONT_DIR="$HOME/.fonts"
-	if [ -d "$FONT_DIR" ]; then
-		echo "Font directory exists"
-	else
-		echo "Font directory does not exist"
-		mkdir -p $FONT_DIR
-	fi
-	# Do something under GNU/Linux platform
-	echo "Linux detected"
-	# install linux dependencies
-	read -p "Do you want to install dependencies? (y/n) " -n 1 -r
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		echo "Installing dependencies"
-		# install mac dependencies
-		sudo apt-get update && sudo apt-get upgrade
-		sudo bash scripts/install/install-deps-linux.sh
-	else
-		echo "Skipping dependencies installation"
-	fi
-	# check if starship is installed
-	if [ -f /usr/local/bin/starship ]; then
-		echo "Starship is already installed"
-	else
-		echo "Installing starship"
-		sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)"
-	fi
+    if [ "$OS" == "Linux" ]; then
+        fc-cache -fv
+    fi
+}
+
+install_deps() {
+    if [ "$OS" == "Darwin" ]; then
+        bash "$DOTFILES_DIR/scripts/install/install-deps-macos.sh"
+    elif [ "$OS" == "Linux" ]; then
+        sudo bash "$DOTFILES_DIR/scripts/install/install-deps-linux.sh"
+
+        if ! command -v starship >/dev/null 2>&1; then
+            echo "Installing starship"
+            sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+        fi
+    fi
+}
+
+ensure_stow() {
+    if ! command -v stow >/dev/null 2>&1; then
+        echo "Installing stow"
+        if [ "$OS" == "Darwin" ]; then
+            brew install stow
+        elif [ "$OS" == "Linux" ]; then
+            sudo apt-get install -y stow
+        fi
+    fi
+}
+
+# ── Main ────────────────────────────────────────────────────────────────────
+
+echo "Detected OS: $OS"
+
+if ask "Install dependencies?"; then
+    install_deps
 fi
 
-# check if stow is installed
-if ! command -v stow >/dev/null 2>&1; then
-	echo "Installing stow"
-	if [ "$(uname)" == "Darwin" ]; then
-		brew install stow
-	elif [ "$(uname)" == "Linux" ]; then
-		sudo apt-get install -y stow
-	fi
-fi
+ensure_stow
+backup_dotfiles
 
-# Call the backup_files function
-backup_files
-
-# stow dotfiles
-cd ~/dotfiles
+echo "Stowing dotfiles from $DOTFILES_DIR"
+cd "$DOTFILES_DIR"
 stow .
 
-# copy fonts from dotfiles to font directory
-echo "The fonts will be copied to $FONT_DIR/"
-cp fonts/* $FONT_DIR/
+install_fonts
 
-# load new fonts
-fc-cache -fv
-
+echo ""
+echo "Done."
