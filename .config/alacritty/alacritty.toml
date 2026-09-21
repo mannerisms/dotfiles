@@ -20,3 +20,8 @@ TERM = 'xterm-256color'
 import = [
     "~/.config/alacritty/themes/themes/nordic.toml"
 ]
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
