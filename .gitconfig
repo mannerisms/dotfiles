@@ -9,4 +9,4 @@
 [push]
 	default = current
 [core]
-	excludesfile = /Users/bastiaan/.gitignore
+	excludesfile = ~/.gitignore

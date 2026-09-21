@@ -2,7 +2,6 @@
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="/Users/bastiaan/Development/Python/crate/.venv/bin:$PATH"
 
 # === Editor Configuration ===
 export EDITOR=vim
@@ -46,8 +45,7 @@ export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
 
 # === Docker CLI completions ===
-fpath=(/Users/bastiaan/.docker/completions $fpath)
-autoload -Uz compinit && compinit
+fpath=("$HOME/.docker/completions" $fpath)
 
 # === NVM (lazy-loaded) ===
 export NVM_DIR="$HOME/.nvm"
@@ -60,6 +58,7 @@ node() { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && sou
 npm()  { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"; npm "$@"; }
 npx()  { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"; npx "$@"; }
 
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
 
 zstyle ':completion:*' menu select
