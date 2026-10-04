@@ -20,27 +20,15 @@ backup_dotfiles() {
     done
 }
 
-install_fonts() {
-    if [ "$OS" == "Darwin" ]; then
-        FONT_DIR="$HOME/Library/Fonts"
-    else
-        FONT_DIR="$HOME/.fonts"
-        mkdir -p "$FONT_DIR"
-    fi
-
-    echo "Copying fonts to $FONT_DIR/"
-    cp "$DOTFILES_DIR"/fonts/* "$FONT_DIR/"
-
-    if [ "$OS" == "Linux" ]; then
-        fc-cache -fv
-    fi
-}
-
 install_deps() {
     if [ "$OS" == "Darwin" ]; then
-        bash "$DOTFILES_DIR/scripts/install/install-deps-macos.sh"
+        brew update
+        brew bundle --file="$DOTFILES_DIR/Brewfile"
+        # Full keyboard access: let Tab/arrows move focus between all controls
+        defaults write -g AppleKeyboardUIMode -int 2
     elif [ "$OS" == "Linux" ]; then
         sudo bash "$DOTFILES_DIR/scripts/install/install-deps-linux.sh"
+        echo "Note: install Hack Nerd Font manually on Linux (https://www.nerdfonts.com/font-downloads)"
 
         if ! command -v starship >/dev/null 2>&1; then
             echo "Installing starship"
@@ -60,6 +48,15 @@ ensure_stow() {
     fi
 }
 
+build_borders() {
+    # JankyBorders focus border for AeroSpace: built from source into the (git-ignored) config folder
+    local dir="$DOTFILES_DIR/.config/aerospace/borders"
+    if [ "$OS" == "Darwin" ] && [ ! -x "$dir/bin/borders" ]; then
+        git clone --depth 1 https://github.com/FelixKratz/JankyBorders.git "$dir"
+        make -C "$dir"
+    fi
+}
+
 # ── Main ────────────────────────────────────────────────────────────────────
 
 echo "Detected OS: $OS"
@@ -75,7 +72,9 @@ echo "Stowing dotfiles from $DOTFILES_DIR"
 cd "$DOTFILES_DIR"
 stow .
 
-install_fonts
+if ask "Build the AeroSpace focus border (JankyBorders)?"; then
+    build_borders
+fi
 
 echo ""
 echo "Done."

@@ -1,0 +1,216 @@
+config-version = 2
+
+start-at-login = true
+auto-reload-config = false
+
+# Layout: on the portrait monitor 'auto' tiles vertically, on the landscape one horizontally
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+accordion-padding = 30
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Big 5K screens: bring the mouse along when focus jumps to the other monitor
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+automatically-unhide-macos-hidden-apps = false
+focus-follows-mouse.enabled = false
+key-mapping.preset = 'qwerty'
+
+# 1 and P1 always exist, so each monitor always has a home workspace
+# (without them AeroSpace invents 5, 6, 10... after a restart or display reconnect)
+persistent-workspaces = ["1", "P1"]
+
+# Focus border (JankyBorders, built into ~/.config/aerospace/borders): muted sage green, only the focused window
+after-startup-command = [
+  'exec-and-forget ~/.config/aerospace/borders/bin/borders active_color=0xff94b08a inactive_color=0x00000000 width=7.0 style=round'
+]
+
+
+[gaps]
+    inner.horizontal = 8
+    inner.vertical =   8
+    outer.left =       8
+    outer.bottom =     8
+    outer.top =        8
+    outer.right =      8
+
+# --- Workspaces ---------------------------------------------------------
+# main      = landscape monitor (or the laptop when alone) -> 1-4, work
+# secondary = portrait monitor                             -> P1-P4 (keys q w e r); falls back to main when solo
+# Only 1 and P1 are persistent; the others vanish when empty, so cycling skips them
+
+[workspace-to-monitor-force-assignment]
+    1 = 'main'
+    2 = 'main'
+    3 = 'main'
+    4 = 'main'
+    5 = 'main'
+    6 = 'main'
+    7 = 'main'
+    8 = 'main'
+    9 = 'main'
+    P1 = ['secondary', 'main']
+    P2 = ['secondary', 'main']
+    P3 = ['secondary', 'main']
+    P4 = ['secondary', 'main']
+    P5 = ['secondary', 'main']
+    P6 = ['secondary', 'main']
+    P7 = ['secondary', 'main']
+    P8 = ['secondary', 'main']
+    P9 = ['secondary', 'main']
+
+# --- App placement ------------------------------------------------------
+[[on-window-detected]]
+    if.app-id = 'com.apple.MobileSMS'
+    run = 'move-node-to-workspace P1'
+
+[[on-window-detected]]
+    if.app-id = 'net.whatsapp.WhatsApp'
+    run = 'move-node-to-workspace P1'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.mail'
+    run = 'move-node-to-workspace P2'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.iCal'
+    run = 'move-node-to-workspace P2'
+
+[[on-window-detected]]
+    if.app-id = 'md.obsidian'
+    run = 'move-node-to-workspace P3'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.Notes'
+    run = 'move-node-to-workspace P3'
+
+# Utilities that should float instead of tile
+[[on-window-detected]]
+    if.app-id = 'com.apple.systempreferences'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.DiskUtility'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'ch.protonvpn.mac'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.finder'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.1password.1password'
+    run = 'layout floating'
+
+# --- Keybindings (alt = option) -----------------------------------------
+[mode.main.binding]
+    # Layout
+    alt-slash = 'layout tiles horizontal vertical'
+    alt-shift-slash = 'layout accordion horizontal vertical'
+    alt-shift-f = 'layout floating tiling'
+    alt-shift-enter = 'fullscreen'
+
+    # Focus / move windows (vim keys)
+    alt-h = 'focus left'
+    alt-j = 'focus down'
+    alt-k = 'focus up'
+    alt-l = 'focus right'
+    alt-shift-h = 'move left'
+    alt-shift-j = 'move down'
+    alt-shift-k = 'move up'
+    alt-shift-l = 'move right'
+
+    alt-minus = 'resize smart -50'
+    alt-equal = 'resize smart +50'
+
+    # Workspaces: 1-4 on the landscape monitor, q w e r (= P1-P4) on the portrait one
+    alt-1 = 'workspace 1'
+    alt-2 = 'workspace 2'
+    alt-3 = 'workspace 3'
+    alt-4 = 'workspace 4'
+    alt-5 = 'workspace 5'
+    alt-6 = 'workspace 6'
+    alt-7 = 'workspace 7'
+    alt-8 = 'workspace 8'
+    alt-9 = 'workspace 9'
+    alt-t = 'workspace P5'
+    alt-y = 'workspace P6'
+    alt-u = 'workspace P7'
+    alt-i = 'workspace P8'
+    alt-o = 'workspace P9'
+    alt-q = 'workspace P1'
+    alt-w = 'workspace P2'
+    alt-e = 'workspace P3'
+    alt-r = 'workspace P4'
+
+    alt-shift-1 = 'move-node-to-workspace --focus-follows-window 1'
+    alt-shift-2 = 'move-node-to-workspace --focus-follows-window 2'
+    alt-shift-3 = 'move-node-to-workspace --focus-follows-window 3'
+    alt-shift-4 = 'move-node-to-workspace --focus-follows-window 4'
+    alt-shift-5 = 'move-node-to-workspace --focus-follows-window 5'
+    alt-shift-6 = 'move-node-to-workspace --focus-follows-window 6'
+    alt-shift-7 = 'move-node-to-workspace --focus-follows-window 7'
+    alt-shift-8 = 'move-node-to-workspace --focus-follows-window 8'
+    alt-shift-9 = 'move-node-to-workspace --focus-follows-window 9'
+    alt-shift-t = 'move-node-to-workspace --focus-follows-window P5'
+    alt-shift-y = 'move-node-to-workspace --focus-follows-window P6'
+    alt-shift-u = 'move-node-to-workspace --focus-follows-window P7'
+    alt-shift-i = 'move-node-to-workspace --focus-follows-window P8'
+    alt-shift-o = 'move-node-to-workspace --focus-follows-window P9'
+    alt-shift-q = 'move-node-to-workspace --focus-follows-window P1'
+    alt-shift-w = 'move-node-to-workspace --focus-follows-window P2'
+    alt-shift-e = 'move-node-to-workspace --focus-follows-window P3'
+    alt-shift-r = 'move-node-to-workspace --focus-follows-window P4'
+
+    alt-tab = 'workspace-back-and-forth'
+
+
+    # Cycle through the workspaces of the focused monitor
+    alt-comma = 'workspace --wrap-around prev'
+    alt-period = 'workspace --wrap-around next'
+    alt-shift-comma = 'move-node-to-workspace --wrap-around prev --focus-follows-window'
+    alt-shift-period = 'move-node-to-workspace --wrap-around next --focus-follows-window'
+
+    # Monitors: focus the left / right one; shift sends the window, ctrl sends the whole workspace
+    alt-leftSquareBracket = 'focus-monitor left'
+    alt-rightSquareBracket = 'focus-monitor right'
+    alt-shift-leftSquareBracket = 'move-node-to-monitor left --focus-follows-window'
+    alt-shift-rightSquareBracket = 'move-node-to-monitor right --focus-follows-window'
+    alt-ctrl-leftSquareBracket = 'exec-and-forget ~/.config/aerospace/send-workspace.sh left'
+    alt-ctrl-rightSquareBracket = 'exec-and-forget ~/.config/aerospace/send-workspace.sh right'
+
+    # Move a whole workspace to the other monitor
+    alt-shift-tab = 'exec-and-forget ~/.config/aerospace/monitor-layout.sh'
+
+    # Group the focused window with its neighbour into a nested container
+    alt-ctrl-h = 'join-with left'
+    alt-ctrl-j = 'join-with down'
+    alt-ctrl-k = 'join-with up'
+    alt-ctrl-l = 'join-with right'
+
+    # Open AeroSpace's menu bar item (lists the apps on each workspace)
+    alt-backslash = 'exec-and-forget osascript -e "tell application \"System Events\" to tell process \"AeroSpace\" to click menu bar item 1 of menu bar 2"'
+    # Cycle the focused window through 1/2 -> 2/3 -> 1/3 of the screen
+    alt-shift-backslash = 'exec-and-forget ~/.config/aerospace/cycle-size.sh'
+
+    # Pause / resume AeroSpace (windows stay where they are)
+    alt-shift-esc = 'enable toggle'
+
+    # Pick any window from another workspace and bring it here
+    alt-ctrl-b = 'exec-and-forget ~/.config/aerospace/bring-window.sh'
+
+    alt-shift-semicolon = 'mode service'
+
+[mode.service.binding]
+    esc = ['reload-config', 'mode main']
+    r = ['flatten-workspace-tree', 'mode main']       # reset layout
+    f = ['layout floating tiling', 'mode main']
+    backspace = ['close-all-windows-but-current', 'mode main']
+
+    alt-shift-h = ['join-with left', 'mode main']
+    alt-shift-j = ['join-with down', 'mode main']
+    alt-shift-k = ['join-with up', 'mode main']
+    alt-shift-l = ['join-with right', 'mode main']

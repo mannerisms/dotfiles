@@ -50,3 +50,7 @@ node_modules/
 # Misc
 *automatic_backups*
 *.bak
+
+# AeroSpace: JankyBorders is cloned and built per machine (see deploy.sh); runtime state
+.config/aerospace/borders/
+.config/aerospace/.cycle-size-state.json

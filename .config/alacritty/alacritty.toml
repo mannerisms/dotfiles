@@ -18,7 +18,7 @@ TERM = 'xterm-256color'
 
 [general]
 import = [
-    "~/.config/alacritty/themes/themes/nordic.toml"
+    "~/.config/alacritty/themes/nordic.toml"
 ]
 
 [[keyboard.bindings]]

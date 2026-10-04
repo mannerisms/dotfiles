@@ -8,5 +8,3 @@
 	email = mannerisms@gmail.com
 [push]
 	default = current
-[core]
-	excludesfile = ~/.gitignore

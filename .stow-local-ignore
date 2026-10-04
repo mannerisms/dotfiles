@@ -4,6 +4,6 @@ gitignore
 scripts
 README
 .DS_Store
-fonts
 deploy.sh
 \.bak$
+\.gitignore

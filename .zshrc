@@ -1,7 +1,7 @@
 # === Path Configuration ===
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
+# Prepend to the inherited PATH (do not replace it); typeset -U drops duplicates
+typeset -U path PATH
+path=(/opt/homebrew/bin /opt/homebrew/sbin "$HOME/.local/bin" $path)
 
 # === Editor Configuration ===
 export EDITOR=vim
@@ -37,9 +37,6 @@ if [[ -f /usr/bin/setxkbmap ]]; then
     setxkbmap -option caps:escape || echo "Failed to remap caps lock to escape"
 fi
 
-# === Zoxide (smart directory jumping) ===
-eval "$(zoxide init zsh)"
-
 # === Starship Prompt ===
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
@@ -47,18 +44,16 @@ eval "$(starship init zsh)"
 # === Docker CLI completions ===
 fpath=("$HOME/.docker/completions" $fpath)
 
-# === NVM (lazy-loaded) ===
-export NVM_DIR="$HOME/.nvm"
-nvm() {
-    unset -f nvm node npm npx
-    [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"
-    nvm "$@"
-}
-node() { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"; node "$@"; }
-npm()  { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"; npm "$@"; }
-npx()  { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"; npx "$@"; }
-
+# === Completion ===
 fpath+=~/.zfunc
-autoload -Uz compinit && compinit
+autoload -Uz compinit
+# Full compinit security check only when the dump is older than 24h, otherwise use the cache (-C)
+() {
+    setopt local_options extendedglob
+    if [[ -n $HOME/.zcompdump(#qN.mh+24) ]]; then compinit && touch "$HOME/.zcompdump"; else compinit -C; fi
+}
 
 zstyle ':completion:*' menu select
+
+# === Zoxide (smart directory jumping), must come after compinit ===
+eval "$(zoxide init zsh)"

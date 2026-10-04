@@ -27,11 +27,6 @@ alias gco='git checkout'
 alias la='ls -lGa'
 alias ls='ls -lG'
 
-# Docker aliases
-alias d=docker
-alias dc=docker-compose
-alias dkill="pgrep 'Docker' | xargs kill -9"
-
 # Tmux aliases
 alias tmb='tmux new-session -A -s base'
 alias ta='tmux attach -t'

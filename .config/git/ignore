@@ -1,0 +1,8 @@
+# Global git ignore (read by git from ~/.config/git/ignore): OS junk only, safe for every repo
+.DS_Store
+*DS_Store
+Desktop.ini
+._*
+Thumbs.db
+.Spotlight-V100
+.Trashes

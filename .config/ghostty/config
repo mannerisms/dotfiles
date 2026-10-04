@@ -1,0 +1,41 @@
+# Ghostty config, mirroring the old Alacritty setup (font, padding, translucency, Nordic colours)
+
+font-family = "Hack Nerd Font"
+font-size = 12
+
+window-padding-x = 5
+window-padding-y = 0
+
+# No title bar (tmux and AeroSpace handle tabs and splits; macOS native tabs are off with this)
+macos-titlebar-style = hidden
+
+background-opacity = 0.80
+background-blur = true
+
+# Shift+Enter sends ESC + Return (newline in Claude Code and similar TUIs), same as the Alacritty binding
+keybind = shift+enter=text:\x1b\r
+
+# Over SSH, fall back to TERM=xterm-256color on hosts that do not know xterm-ghostty (NAS, Proxmox, ...)
+shell-integration-features = ssh-env
+
+# Nordic palette (vendored from alacritty-theme)
+background = 242933
+foreground = BBBDAF
+selection-background = F0DFAF
+selection-foreground = 000000
+palette = 0=#191C1D
+palette = 1=#BD6062
+palette = 2=#A3D6A9
+palette = 3=#F0DFAF
+palette = 4=#8FB4D8
+palette = 5=#C7A9D9
+palette = 6=#B6D7A8
+palette = 7=#BDC5BD
+palette = 8=#727C7C
+palette = 9=#D18FAF
+palette = 10=#B7CEB0
+palette = 11=#BCBCBC
+palette = 12=#E0CF9F
+palette = 13=#C7A9D9
+palette = 14=#BBDA97
+palette = 15=#BDC5BD

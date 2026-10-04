@@ -1,4 +1,20 @@
-## New install
-Run appropriate install script in scripts/install directory
+# dotfiles
 
-run stow . inside of dotfiles directory
+Managed with GNU Stow. `stow .` inside this directory symlinks everything into `~`.
+
+## New machine
+    git clone https://github.com/mannerisms/dotfiles ~/dotfiles
+    cd ~/dotfiles && bash deploy.sh
+
+`deploy.sh` runs, in order: dependencies (macOS: `brew bundle` from `Brewfile`, plus a keyboard default; Linux:
+`scripts/install/install-deps-linux.sh`), `stow .`, and an optional build of the AeroSpace focus border.
+
+## Layout
+- `Brewfile` is the single list of everything installed with Homebrew (formulae, casks, VS Code extensions, fonts).
+  Update it with `brew bundle dump --force --file=Brewfile`, then prune by hand.
+- `.config/git/ignore` is the global git ignore (OS junk only). `.gitignore` here is only for this repo and is not stowed.
+- `.config/aerospace/` holds the AeroSpace config and helper scripts. The `borders/` folder (JankyBorders) is cloned and
+  built per machine by `deploy.sh` and is git-ignored.
+- `.config/alacritty/themes/nordic.toml` is vendored from alacritty-theme.
+- Fonts: installed through the Brewfile (`font-hack-nerd-font`), not stored in the repo.
+- `.config/ghostty/config` mirrors the Alacritty setup (Ghostty is on trial next to Alacritty).
